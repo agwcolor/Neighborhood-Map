@@ -29,7 +29,18 @@ export function load_places() {
 /*export function load_places() {
   let city = 'Silver Spring, MD';
   let query = 'Music';
-  var apiURL = "https://api.eventful.com/json/events/search?...&location=San+Diego&app_key=k66RNn8N5hHT9mB7"
-  return fetch(apiURL, {mode:"no-cors"}).then(resp => resp.json())
+  var apiURL = "https://www.eventbriteapi.com/v3/events/search/?token=LKSJSLT4Y2ARJSLEO37B&q=french"
+  return fetch(apiURL).then(resp => resp.json())
 }*/
+
+
+/*export function load_places() {
+  let city = 'Silver Spring, MD';
+  let query = 'Music';
+  var apiURL = "https://api.eventful.com/json/events/search?...&location=San+Diego&app_key=k66RNn8N5hHT9mB7"
+  return fetch(apiURL, {mode:"no-cors"})
+                .then(resp => resp.json())
+                .catch(console.log("not working"))
+                .then(data => console.log(data))
+  }*/
 /*API auth format ---> https://api.foursquare.com/v2/venues/search?ll=40.7,-74&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&v=YYYYMMDD */

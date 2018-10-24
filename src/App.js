@@ -14,7 +14,6 @@ class App extends Component {
         placesPromise
       ])
      .then(values => {  //an array of values
-        console.log("hi there");
         console.log(values);  //see the google maps object
         let google = values[0];  //google 1st,
         this.venues = values[1].response.venues;
@@ -25,12 +24,24 @@ class App extends Component {
         this.map = new google.maps.Map(document.getElementById('map'), {
             zoom: 9,
             scrollwheel: true,
-            center: { lat: this.venues[0].location.lat, lng: this.venues[0].location.lng }
-        });
+            center: { lat: this.venues[0].location.lat, lng: this.venues[0].location.lng }});
         this.infowindow = new google.maps.InfoWindow();
+
+this.venues.forEach(venue => {   //create marker
+    let marker = new google.maps.Marker({
+      position: { lat: venue.location.lat, lng: venue.location.lng},
+      map: this.map,
+      venue: venue,
+      id: venue.id,
+        name: venue.name,
+      animation: google.maps.Animation.DROP
+       });
+    this.markers.push(marker)
+
+  });
+
      });
   }
-
 
   render() {
     return (
