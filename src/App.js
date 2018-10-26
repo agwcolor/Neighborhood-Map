@@ -4,6 +4,7 @@ import { load_google_maps, load_places } from './utils/utils.js';
 
 class App extends Component {
   state = {}
+  myVenues = []
 
     componentDidMount() {
       //load google maps API asynchronously
@@ -17,7 +18,7 @@ class App extends Component {
         console.log(values);  //see the google maps object
         let google = values[0];  //google 1st,
         this.venues = values[1].response.venues;
-        console.log(this.venues[0].location.lat + "lat" + this.venues[0].location.lng  + "long" + "is a the this.venues variable");
+        console.log(this.venues[0].location.lat + "lat" + this.venues[0].location.lng  + "long is a the this.venues variable");
 
 
         //const location = {lat: 45.516136, lng: -73.656830};
@@ -45,7 +46,8 @@ class App extends Component {
          });
         this.markers.push(marker);
         //console.log(this.markers)
-       });
+        });
+        this.setState( { myVenues: this.venues }); //see html
 
 
       });
@@ -68,14 +70,42 @@ class App extends Component {
 
 }
 
+//loop through each of the markers and check if query matches input.
+ filterMyVenues(query) {
+  let f= this.venues.filter(venue =>
+    venue.name.toLowerCase().includes(query.toLowerCase())); //give me the venues where the name includes the query
+    this.markers.forEach(marker => {
+       console.log(marker);
+       marker.name.toLowerCase().includes(query.toLowerCase()) === true ?
+       marker.setVisible(true) :
+       marker.setVisible(false)
+    });
+  console.log(query);
+  this.setState( {myVenues: f, query });
+}
+
+
   render() {
     return (
       <div>
         <div id="map">
         </div>
+
         <div id="sidebar">
-        </div>
-      </div>
+        <input placeholder="search" value={this.state.query}
+            onChange={(e) => this.filterMyVenues(e.target.value) }/>
+            {
+                this.state.myVenues && this.state.myVenues.length > 0
+                  && this.state.myVenues.map ((venue, index) => (
+                     <div key={index} className="venue-item" onClick={() => { }}>
+                       {venue.name}
+                     </div>
+
+                  ))
+            }
+       </div>
+
+    </div>
     );
   }
 }
