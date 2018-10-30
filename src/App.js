@@ -27,7 +27,7 @@ class App extends Component {
         this.google = google;
         this.markers = [];  //anything google maps easier to deal w/ not in state.
         let map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 9,
+            zoom: 13,
             scrollwheel: true,
             center: { lat: this.venues[0].location.lat, lng: this.venues[0].location.lng }});
         let infowindow = new google.maps.InfoWindow();
@@ -37,12 +37,12 @@ class App extends Component {
         this.venues.forEach(venue => {   //create marker for each venue
 
            let marker = new google.maps.Marker({
-           position: { lat: venue.location.lat, lng: venue.location.lng},
-           map: this.map,
-           venue: venue,
-           id: venue.id,
-           name: venue.name,
-           animation: google.maps.Animation.DROP
+             position: { lat: venue.location.lat, lng: venue.location.lng},
+             map: this.map,
+             venue: venue,
+             id: venue.id,
+             name: venue.name,
+             animation: google.maps.Animation.DROP
            });
 
            // Add onclick event listener  to open an infowindow at each marker.
@@ -55,9 +55,16 @@ class App extends Component {
 
         });
 
+         google.maps.event.addListener(map, "tilesloaded", function(){
+           [].slice.apply(document.querySelectorAll('#map a')).forEach(function(item) {
+           item.setAttribute('tabindex','0');
+           });
+        })
+
         this.setState( { myVenues: this.venues });
         this.setState( { markers: this.markers });
         //console.log(this.state.myVenues[0].location.address + "is the value of this.state.myVenues");
+
       });
 
       // This function populates the infowindow when the marker is clicked.
@@ -65,7 +72,7 @@ class App extends Component {
    // Check to make sure the infowindow is not already opened on this marker.
    if (infowindow.marker !== marker) {
     infowindow.marker = marker;
-    infowindow.setContent(`<div> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:""} </div>`);
+    infowindow.setContent(`<div tabIndex="0" aria-label="info window"> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:""} </div>`);
     infowindow.open(marker.map, marker);
     if (marker.getAnimation() !== null) { marker.setAnimation(null); }
       else { marker.setAnimation(google.maps.Animation.BOUNCE); }
@@ -75,8 +82,7 @@ class App extends Component {
     infowindow.setMarker = null;
 
     });
-}};
-
+  }};
 }
 
 
@@ -93,16 +99,12 @@ filterMyVenues = (query) => {
   this.setState( {myVenues: f, query });
 }
 
-
-
-
-
 //open infowindow when list item is clicked
 listItemClick = (venue, infowindow = new window.google.maps.InfoWindow()) => { //get marker by id property
   let marker = this.state.markers.filter(m => m.id === venue.id)[0];
   if (infowindow.marker !== marker) {
 
-  infowindow.setContent(`<div> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:""} </div>`);
+  infowindow.setContent(`<div tabIndex="0" aria-label="info window"> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:""} </div>`);
   this.map.setZoom(13);
   this.map.setCenter(marker.position);
   infowindow.open(this.map, marker);
@@ -116,18 +118,19 @@ listItemClick = (venue, infowindow = new window.google.maps.InfoWindow()) => { /
 
   render() {
     return (
-      <div>
+      <main id="maincontent">
 
-          <div id="map">
-          </div>
+        <section id="map-container" aria-label="Map of Restaurants">
+            <div id="map" tabIndex="0" aria-label="location" role="application" className="map_front"></div>
+        </section>
 
-          <Sidebar
+        <Sidebar
              listItemClick={this.listItemClick}
-             filterVenues={this.filterVenues}
+             filterMyVenues={this.filterMyVenues}
              myVenues={this.state.myVenues}
-           />
+        />
 
-    </div>
+      </main>
     );
   }
 }

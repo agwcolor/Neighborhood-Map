@@ -2,15 +2,21 @@ const cacheName = 'neighborhoodmap-app-v1';
 const cacheFiles = [
     '/',
     '/index.html',
+    '/index.js',
+    '/App.css',
+    '/App.js',
+    '/sidebar.js',
+    '/index.css',
+    '/utils/utils.js'
 ];
 /*  install service workder */
-self.addEventListener('install', function(event) {
+window.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open(cacheName).then(function(cache) {
             console.log(cacheFiles);
             return cache.addAll(cacheFiles);
         }).then(function(){
-          return self.skipWaiting();
+          return window.skipWaiting();
         }).catch(function(){
           console.log("something is not working");
         })
@@ -18,12 +24,12 @@ self.addEventListener('install', function(event) {
 });
 
 // Activate event
-self.addEventListener('activate', function(event) {
-  return self.clients.claim();
+window.addEventListener('activate', function(event) {
+  return window.clients.claim();
 });
 
 /*  get items from cache if it's there */
-self.addEventListener('fetch', function(event) {
+window.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(response) {
       return response ||
@@ -33,7 +39,7 @@ self.addEventListener('fetch', function(event) {
 });
 
 /*  get items from cache if it's there */
-self.addEventListener('fetch', function(event) {
+window.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(response) {
       return response ||
