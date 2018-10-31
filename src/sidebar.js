@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
 class Sidebar extends Component {
-	//constructor(props) {
-	//	super(props);
-	//}
+  //constructor(props) {
+  //  super(props);
+  //}
 
-	componentDidMount() {
-	}
+  componentDidMount() {
+  }
 
-	render() {
-		return (
+  render() {
+    return (
        <section id="sidebar" >
            <div className="filter-box">
             <h2 tabIndex="0">Filter</h2>
@@ -23,7 +23,7 @@ class Sidebar extends Component {
                 {
                   this.props.myVenues && this.props.myVenues.length > 0
                   && this.props.myVenues.map ((venue, index) => (
-                  <li tabIndex="0" key={index} className="venue-item"
+                  <li id={venue.name} tabIndex="0" key={index} className="venue-item"
                    onClick={(e) => this.props.listItemClick(venue)}
                   >{venue.name}</li> ))
                 }
@@ -31,7 +31,7 @@ class Sidebar extends Component {
                </ol>
              </section>
       </section>
-	 // this.props.filteredVenues && this.props.filteredVenues.length > 0 etc.
+   // this.props.filteredVenues && this.props.filteredVenues.length > 0 etc.
    );
   }
 }
