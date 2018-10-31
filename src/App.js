@@ -6,13 +6,13 @@ import Sidebar from './sidebar'
 class App extends Component {
 
   state = {
-  myVenues: [],
-  markers: [],
-  infoWindow: '',
-  openMarkers: false,   /* { id : true } */
+  myVenues: [], //filtered venues that appear in sidebar
+  markers: [], //complete list of markers
+  infoWindow: '', //single infowindow to set to currently  active marker
+  openMarkers: false,
   }
 
-  componentDidMount() {
+  componentDidMount() { //first, get api data
 
       window.gm_authFailure = () => { //google maps API error handling
            //  show message to the user
@@ -36,10 +36,8 @@ class App extends Component {
             zoom: 11,
             scrollwheel: true,
             center: { lat: this.venues[2].location.lat, lng: this.venues[2].location.lng }});
-        //let infowindow = new google.maps.InfoWindow();
         if (typeof(this.state.infoWindow) != "undefined") {
             this.setState({ infoWindow : new google.maps.InfoWindow()});
-
         }
 
         let infowindow = this.state.infoWindow;
@@ -57,18 +55,10 @@ class App extends Component {
 
            // Add onclick event listener  to open an infowindow at each marker.
            marker.addListener('click', function(e) {
-           //get side bar list element corresponding to marker
-            let listMarker = document.getElementById(`${marker.name}`);
-            if (listMarker.className !== 'active') {
-            //change color of corresponding sidebar link when map marker clicked
-           listMarker.classList.add("active");
-            }
-
-            populateInfoWindow(this, infowindow);
-           });
+            this.populateInfoWindow(this, venue, marker, infowindow);
+           }.bind(this));
 
            this.markers.push(marker); //add to marker array
-
         });
 
          //add tabindex to google maps markers
@@ -77,41 +67,55 @@ class App extends Component {
            item.setAttribute('tabindex','0');
            });
         })
-
         this.setState( { myVenues: this.venues });
         this.setState( { markers: this.markers });
-        //console.log(this.state.myVenues[0].location.address + "is the value of this.state.myVenues");
-
       });
+}
 
-    //populate infowindow when marker is clicked.
-   function populateInfoWindow(marker, infowindow, google = window.google) {
+
+//populate infowindow when marker is clicked.
+populateInfoWindow = (marker = 0,  venue, google = window.google) => {
+    //set initial state of infoWindow if not already defined
+    if (typeof(this.state.infoWindow) == "undefined") {
+            this.setState({ infoWindow : new window.google.maps.InfoWindow()});
+    }
+
+   let infowindow = this.state.infoWindow;
+   marker = this.state.markers.filter(m => m.id === venue.id)[0];
 
    // make sure the infowindow is not already opened on this marker.
    if (infowindow.marker !== marker) {
-    infowindow.marker = marker;
-    infowindow.setContent(`<div tabIndex="0" aria-label="info window"> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:"No address listed on Foursquare"} </div>`);
-    infowindow.open(marker.map, marker);
+
+       //clear active links
+     let clearActive = document.querySelector(".active");
+     if (clearActive) {clearActive.classList.remove("active")};
+
+      //add active link to sidebar item
+     document.getElementById(`${marker.name}`).classList.add("active");
+
+     infowindow.marker = marker; //set infowindow to current marker
+     infowindow.setContent(`<div tabIndex="0" aria-label="info window"> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:"No address listed on Foursquare"} </div>`);
+     infowindow.open(marker.map, marker);
+     this.map.setZoom(12);
+     this.map.setCenter(marker.position);
+     this.map.panBy(0, -125);
+
+     this.setState( { infoWindow: infowindow }); //update infoWindow to current marker
+     this.setState({openMarkers: true}); //info window is set to opened
+
     if (marker.getAnimation() !== null) { marker.setAnimation(null); }
-      else { marker.setAnimation(google.maps.Animation.BOUNCE); }
-      setTimeout(() => { marker.setAnimation(null) }, 1500);
+      else { marker.setAnimation(this.google.maps.Animation.BOUNCE); }
+    setTimeout(() => { marker.setAnimation(null) }, 1500);
+
     // make sure the marker property is cleared if the infowindow is closed.
-
     infowindow.addListener('closeclick',function(){
-    infowindow.marker = null;
-
+       infowindow.marker = null;
+      this.setState( { infoWindow: infowindow }); //update infowindow state to null
     // remove active link in sidebar if active on closing infoWindow
-    console.log(marker.name + "is the name of the marker");
-    let listMarker = document.getElementById(`${marker.name}`);
-            if (listMarker.classList.contains("active")) {
-           listMarker.classList.remove("active");
-            }
+     document.getElementById(`${marker.name}`).classList.remove("active");
+    }.bind(this));
+}};
 
-    });
-
-  }};
-
-}
 
 //loop through each of the markers and check if query matches input.
 filterMyVenues = (query) => {
@@ -127,58 +131,6 @@ filterMyVenues = (query) => {
 }
 
 
-//open infowindow when list item is clicked
-listItemClick = (venue /*infowindow = new window.google.maps.InfoWindow()*/) => { //get marker by id property
-
-  if (typeof(this.state.infoWindow) == "undefined") {
-            this.setState({ infoWindow : new window.google.maps.InfoWindow()});
-
-        }
-  let infowindow = this.state.infoWindow;
-  let marker = this.state.markers.filter(m => m.id === venue.id)[0];
-  //console.log(marker.id + " is the marker id");
- // console.log(infowindow.marker + " is the value of marker in listItemClick");
-    //if (this.state.openMarkers === false ) {
- //if (infowindow.marker !== marker) {
-   if (infowindow.marker !== marker) {
-
-//    console.log("the marker should not be open");
-    infowindow.marker = marker;
-    console.log(infowindow.marker + " is the value of marker in listItemClick");
-    //infowindow.close();
-    infowindow.setContent(`<div tabIndex="0" aria-label="info window"> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:"No address listed on Foursquare"} </div>`);
-    this.map.setZoom(13);
-    this.map.setCenter(marker.position);
-    infowindow.open(this.map, marker);
-   // this.setState( { infoWindow: infowindow });
-    this.setState( { infoWindow: infowindow });
-
-    console.log("the marker is now open");
-
-    this.setState({openMarkers: true});
-    console.log(infowindow.id + "is the infowindow id");
-    console.log(this.state.openMarkers + "is the value of openMarkers");
-    this.map.panBy(0, -125);
-    if (marker.getAnimation() !== null) { marker.setAnimation(null); }
-      else { marker.setAnimation(this.google.maps.Animation.BOUNCE); }
-    setTimeout(() => { marker.setAnimation(null) }, 1500);
-
-
-    infowindow.addListener('closeclick',function(){
-      infowindow.marker = null;
-      this.setState( { infoWindow: infowindow });
-
-      // remove active link in sidebar if active on closing infoWindow
-      console.log(marker.name + "is the name of the marker");
-      let listMarker = document.getElementById(`${marker.name}`);
-            if (listMarker.classList.contains("active")) {
-           listMarker.classList.remove("active");
-            }
-
-    }.bind(this));
-}
-}
-
   render() {
     return (
       <main id="maincontent">
@@ -188,11 +140,10 @@ listItemClick = (venue /*infowindow = new window.google.maps.InfoWindow()*/) => 
         </section>
 
         <Sidebar
-             listItemClick={this.listItemClick}
+             populateInfoWindow={this.populateInfoWindow}
              filterMyVenues={this.filterMyVenues}
              myVenues={this.state.myVenues}
         />
-
       </main>
     );
   }
