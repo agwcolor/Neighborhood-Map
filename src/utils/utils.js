@@ -1,4 +1,4 @@
-//load google maps so it is available to all components -
+//load google maps so it is available to all components ----
 // Credit Ryan Waite -
 //https://github.com/ryanwaite28/script-store/blob/master/js/react_resolve_google_maps.js
 export function load_google_maps() {  // Credits Ryan Waite
@@ -15,8 +15,9 @@ export function load_google_maps() {  // Credits Ryan Waite
        const API_KEY = 'AIzaSyBodL8HXeRSDLsE6-rNdkERs3IE0ORP16E';
        script.src = `https://maps.googleapis.com/maps/api/js?libraries=places&key=${API_KEY}&v=3&callback=resolveGoogleMapsPromise`;
        script.async = true;
-       console.log("I'm in the load_google_maps function");
-       console.log(script.src);
+       //handle Google Maps API connection failure
+       script.onerror=function() {alert("Error loading google maps! Please see https://developers.google.com/maps/documentation/javascript/error-messages for details")};
+       console.log(script.onerror);
        document.body.appendChild(script);
   });
 

@@ -88,10 +88,14 @@ populateInfoWindow = (marker = 0,  venue, google = window.google) => {
 
        //clear active links
      let clearActive = document.querySelector(".active");
-     if (clearActive) {clearActive.classList.remove("active")};
+     if (clearActive) {
+        clearActive.classList.remove("active");
+        clearActive.setAttribute("aria-pressed", "false")
+        };
 
       //add active link to sidebar item
      document.getElementById(`${marker.name}`).classList.add("active");
+     document.getElementById(`${marker.name}`).setAttribute("aria-pressed", "true");
 
      infowindow.marker = marker; //set infowindow to current marker
      infowindow.setContent(`<div tabIndex="0" aria-label="info window"> ${marker.name} <p> ${marker.venue.location.address?marker.venue.location.address:"No address listed on Foursquare"} </div>`);
@@ -112,7 +116,9 @@ populateInfoWindow = (marker = 0,  venue, google = window.google) => {
        infowindow.marker = null;
       this.setState( { infoWindow: infowindow }); //update infowindow state to null
     // remove active link in sidebar if active on closing infoWindow
-     document.getElementById(`${marker.name}`).classList.remove("active");
+      document.getElementById(`${marker.name}`).classList.remove("active");
+      document.getElementById(`${marker.name}`).setAttribute("aria-pressed", "false");
+
     }.bind(this));
 }};
 
@@ -126,7 +132,7 @@ filterMyVenues = (query) => {
        marker.setVisible(true) :
        marker.setVisible(false)
     });
-  console.log(query);
+ // console.log(query);
   this.setState( {myVenues: f, query });
 }
 
