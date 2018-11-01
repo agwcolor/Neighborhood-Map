@@ -5,17 +5,17 @@ neighborhood-map
 
 ## Table of Contents
 * [Development Version Installation](#installation)
-* [Build-Deploy](#build_deploy)
-* [Production Installation](#production_installation)
+* [Build Deploy](#build-deploy)
+* [Production Installation](#production-installation)
 * [Instructions](#instructions)
 * [Background](#background)
 * [Dependencies](#dependencies)
 * [Contributing](#contributing)
 * [License](#license)
 
-## Development Version Installation
+## Installation
 
-To install the app on your desktop:
+To install the development version of the app on your desktop:
 1. Navigate to https://github.com/agwcolor/Neighborhood-Map 
 2. Click the green 'Clone or Download' button to copy the directory or zipfile to your desktop machine.
 3. If you have a zipfile, extract it.
@@ -25,7 +25,7 @@ To install the app on your desktop:
 5. From inside the neighborhood-map folder, run ````npm start````.  
    A browser window will open up to http://localhost:3000/ .  
  
-## Build-Deploy
+## Build Deploy 
 1. For the project to build, **these files must exist with exact filenames**:
 ```
 my-app/
