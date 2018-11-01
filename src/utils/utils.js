@@ -14,10 +14,10 @@ export function load_google_maps() {  // Credits Ryan Waite
        const script = document.createElement("script");
        const API_KEY = 'AIzaSyBodL8HXeRSDLsE6-rNdkERs3IE0ORP16E';
        script.src = `https://maps.googleapis.com/maps/api/js?libraries=places&key=${API_KEY}&v=3&callback=resolveGoogleMapsPromise`;
-       script.async = true;
+       script.defer = true;
        //handle Google Maps API connection failure
        script.onerror=function() {alert("Error loading google maps! Please see https://developers.google.com/maps/documentation/javascript/error-messages for details")};
-       console.log(script.onerror);
+      // console.log(script.onerror);
        document.body.appendChild(script);
   });
 

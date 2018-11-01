@@ -4,14 +4,16 @@ neighborhood-map
 # Neighborhood Map App
 
 ## Table of Contents
-* [Installation](#installation)
+* [Development Version Installation](#installation)
+* [Build-Deploy](#build_deploy)
+* [Production Installation](#production_installation)
 * [Instructions](#instructions)
 * [Background](#background)
 * [Dependencies](#dependencies)
 * [Contributing](#contributing)
 * [License](#license)
 
-## Installation
+## Development Version Installation
 
 To install the app on your desktop:
 1. Navigate to https://github.com/agwcolor/Neighborhood-Map 
@@ -22,11 +24,55 @@ To install the app on your desktop:
     You will need the following : react, react-dom . IF you have problems, please check the the package.json file for reference.  
 5. From inside the neighborhood-map folder, run ````npm start````.  
    A browser window will open up to http://localhost:3000/ .  
+ 
+## Build-Deploy
+1. For the project to build, **these files must exist with exact filenames**:
+```
+my-app/
+  README.md
+  node_modules/
+  package.json
+  public/
+    index.html
+    favicon.ico
+  src/
+    App.css
+    App.js
+    App.test.js
+    index.css
+    index.js
+    logo.svg
+```
 
+2. From inside neighborhood-map, type: npm run build 
+```
+> neighborhood-map@0.1.0 build /Users/.../my-projects/react/neighborhood-map
+> react-scripts build
+
+Creating an optimized production build...
+Compiled successfully.
+
+File sizes after gzip: ...
+
+The project was built assuming it is hosted at the server root.
+You can control this with the homepage field in your package.json.
+For example, add this to build it for GitHub Pages:
+
+  "homepage" : "http://myname.github.io/myapp",
+
+The build folder is ready to be deployed.
+```
+
+## Production Installation
+
+1. You may serve the app with a static server:
+
+2. Find out more about deployment here: 
+  http://bit.ly/CRA-deploy
 
 ## Instructions
 
-This is the Neighborhood Map app
+Using the Neighborhood Map app
 
 1. (search) - In search bar, enter query. The list of 10 items will filter on your search. The Markers on the map will be updated. (You can change the number of items to search for, place, query in the utils.js folder)
 
